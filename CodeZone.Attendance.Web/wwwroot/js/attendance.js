@@ -47,8 +47,9 @@ $(document).ready(function () {
                 if (response.success) {
                     if (response.exists) {
                         currentAttendanceId = response.id;
-                        const statusClass = response.statusValue === 0 ? 'alert-success' : 'alert-danger';
-                        const icon = response.statusValue === 0 ? '<i class="bi bi-check-circle"></i>' : '<i class="bi bi-x-circle"></i>';
+                        // 1 = Present (green), 2 = Absent (red)
+                        const statusClass = response.statusValue === 1 ? 'alert-success' : 'alert-danger';
+                        const icon = response.statusValue === 1 ? '<i class="bi bi-check-circle"></i>' : '<i class="bi bi-x-circle"></i>';
                         $('#currentStatusDisplay')
                             .html(`${icon} <strong>${response.status}</strong>`)
                             .removeClass('alert-info alert-success alert-danger alert-warning')
@@ -70,12 +71,12 @@ $(document).ready(function () {
 
     // Mark Present button
     $('#markPresentBtn').on('click', function () {
-        markAttendance(0); // 0 = Present
+        markAttendance(1); // 1 = Present
     });
 
     // Mark Absent button
     $('#markAbsentBtn').on('click', function () {
-        markAttendance(1); // 1 = Absent
+        markAttendance(2); // 2 = Absent
     });
 
     // Mark attendance function
@@ -104,8 +105,9 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     if (response.success) {
+                        // Immediately update the status display BEFORE showing notification
+                        updateStatusDisplay(status);
                         showNotification(response.message, 'success');
-                        checkAttendanceStatus();
                         loadAttendanceList();
                     } else {
                         showNotification(response.message, 'danger');
@@ -131,6 +133,7 @@ $(document).ready(function () {
                 success: function (response) {
                     if (response.success) {
                         showNotification(response.message, 'success');
+                        // Re-check the status to get the new attendance ID
                         checkAttendanceStatus();
                         loadAttendanceList();
                     } else {
@@ -142,6 +145,18 @@ $(document).ready(function () {
                 }
             });
         }
+    }
+
+    // Helper function to update status display immediately
+    function updateStatusDisplay(statusValue) {
+        const statusText = statusValue === 1 ? 'Present' : 'Absent';
+        const statusClass = statusValue === 1 ? 'alert-success' : 'alert-danger';
+        const icon = statusValue === 1 ? '<i class="bi bi-check-circle"></i>' : '<i class="bi bi-x-circle"></i>';
+        
+        $('#currentStatusDisplay')
+            .html(`${icon} <strong>${statusText}</strong>`)
+            .removeClass('alert-info alert-success alert-danger alert-warning')
+            .addClass(statusClass);
     }
 
     // Clear selection button
@@ -255,17 +270,25 @@ $(document).ready(function () {
         });
     }
 
-    // Show notification
+    // Show notification - Fixed version that doesn't affect other elements
     function showNotification(message, type) {
+        // Remove any existing notifications first
+        $('.toast-notification').remove();
+        
         const alertHtml = `
-            <div class="alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert" style="z-index: 9999; min-width: 300px;">
+            <div class="toast-notification alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3" role="alert" style="z-index: 9999; min-width: 300px;">
                 ${message}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         `;
+        
         $('body').append(alertHtml);
+        
+        // Use a more specific selector and remove the element properly
         setTimeout(function () {
-            $('.alert').alert('close');
+            $('.toast-notification').fadeOut(300, function() {
+                $(this).remove();
+            });
         }, 3000);
     }
 
