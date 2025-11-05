@@ -6,7 +6,7 @@ namespace CodeZone.Attendance.Business.Interfaces;
 public interface IEmployeeService
 {
     Task<PagedResult<EmployeeListViewModel>> GetPagedEmployeeListAsync(int page, int pageSize);
-    Task<EmployeeFormViewModel?> GetEmployeeForEditAsync(int id);
+    Task<EmployeeFormViewModel?> GetEmployeeByIdAsync(int id);
     Task<EmployeeFormViewModel> GetEmployeeFormViewModelAsync();
     Task<bool> CreateEmployeeAsync(EmployeeFormViewModel model);
     Task<bool> UpdateEmployeeAsync(EmployeeFormViewModel model);

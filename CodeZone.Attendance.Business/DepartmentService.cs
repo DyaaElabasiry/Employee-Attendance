@@ -1,4 +1,5 @@
 ﻿using CodeZone.Attendance.Business.Interfaces;
+using CodeZone.Attendance.Business.Models;
 using CodeZone.Attendance.Data.Entities;
 using CodeZone.Attendance.Data.Models;
 using CodeZone.Attendance.Data.Repositories.Interfaces;
@@ -140,7 +141,26 @@ public class DepartmentService : IDepartmentService
         // Repository: Only performs the delete operation
         return await _departmentRepo.DeleteAsync(id);
     }
+    public async Task<ValidationResult> ValidateDepartmentAsync(DepartmentFormViewModel model)
+    {
+        var result = ValidationResult.Success();
 
+        // Check code uniqueness
+        var isCodeUnique = await IsCodeUniqueAsync(model.Code, model.Id);
+        if (!isCodeUnique)
+        {
+            result.AddError("Code", "This department code is already in use.");
+        }
+
+        // Check name uniqueness
+        var isNameUnique = await IsNameUniqueAsync(model.Name, model.Id);
+        if (!isNameUnique)
+        {
+            result.AddError("Name", "This department name is already in use.");
+        }
+
+        return result;
+    }
     public async Task<bool> IsCodeUniqueAsync(string code, int departmentId = 0)
     {
         return await _departmentRepo.IsCodeUniqueAsync(departmentId, code);

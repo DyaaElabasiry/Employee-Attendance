@@ -21,12 +21,6 @@ public class EmployeeFormViewModel
     [Display(Name = "Department")]
     public int DepartmentId { get; set; }
 
-    // For populating the dropdown
-    public List<DepartmentSelectItem>? Departments { get; set; }
+    
 }
 
-public class DepartmentSelectItem
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-}

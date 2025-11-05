@@ -50,14 +50,14 @@ public class EmployeeService : IEmployeeService
         };
     }
 
-    public async Task<EmployeeFormViewModel?> GetEmployeeForEditAsync(int id)
+    public async Task<EmployeeFormViewModel?> GetEmployeeByIdAsync(int id)
     {
         var employee = await _employeeRepo.GetByIdAsync(id);
         
         if (employee == null)
             return null;
 
-        var departments = await GetDepartmentsAsync();
+        
 
         return new EmployeeFormViewModel
         {
@@ -65,18 +65,15 @@ public class EmployeeService : IEmployeeService
             FullName = employee.FullName,
             Email = employee.Email,
             DepartmentId = employee.DepartmentId,
-            Departments = departments
+            
         };
     }
 
     public async Task<EmployeeFormViewModel> GetEmployeeFormViewModelAsync()
     {
-        var departments = await GetDepartmentsAsync();
+        
 
-        return new EmployeeFormViewModel
-        {
-            Departments = departments
-        };
+        return new EmployeeFormViewModel();
     }
 
     public async Task<bool> CreateEmployeeAsync(EmployeeFormViewModel model)
@@ -130,17 +127,7 @@ public class EmployeeService : IEmployeeService
 
     // --- HELPER METHODS ---
 
-    private async Task<List<DepartmentSelectItem>> GetDepartmentsAsync()
-    {
-        return await _context.Departments
-            .OrderBy(d => d.Name)
-            .Select(d => new DepartmentSelectItem
-            {
-                Id = d.Id,
-                Name = d.Name
-            })
-            .ToListAsync();
-    }
+    
 
     private int GetPresentCountForCurrentMonth(ICollection<AttendanceRecord> records)
     {

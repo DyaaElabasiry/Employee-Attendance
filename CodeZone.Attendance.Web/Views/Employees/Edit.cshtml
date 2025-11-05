@@ -31,9 +31,9 @@
                 <label asp-for="DepartmentId" class="form-label"></label>
                 <select asp-for="DepartmentId" class="form-select">
                     <option value="">-- Select Department --</option>
-                    @if (Model.Departments != null)
+                    @if (ViewBag.Departments != null)
                     {
-                        @foreach (var dept in Model.Departments)
+                        @foreach (var dept in ViewBag.Departments)
                         {
                             <option value="@dept.Id">@dept.Name</option>
                         }

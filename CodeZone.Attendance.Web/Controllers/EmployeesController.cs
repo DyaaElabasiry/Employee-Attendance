@@ -7,10 +7,12 @@ namespace CodeZone.Attendance.Web.Controllers;
 public class EmployeesController : Controller
 {
     private readonly IEmployeeService _employeeService;
+    private readonly IDepartmentService _departmentService;
 
-    public EmployeesController(IEmployeeService employeeService)
+    public EmployeesController(IEmployeeService employeeService, IDepartmentService departmentService)
     {
         _employeeService = employeeService;
+        _departmentService = departmentService;
     }
 
     // Handles GET: /Employees or /Employees/Index
@@ -27,6 +29,7 @@ public class EmployeesController : Controller
     public async Task<IActionResult> Create()
     {
         var model = await _employeeService.GetEmployeeFormViewModelAsync();
+        await PopulateDepartments();
         return View(model);
     }
 
@@ -35,10 +38,11 @@ public class EmployeesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(EmployeeFormViewModel model)
     {
+        await PopulateDepartments();
         if (!ModelState.IsValid)
         {
             // Reload departments if validation fails
-            model.Departments = (await _employeeService.GetEmployeeFormViewModelAsync()).Departments;
+            await PopulateDepartments();
             return View(model);
         }
 
@@ -47,7 +51,7 @@ public class EmployeesController : Controller
         if (!isEmailUnique)
         {
             ModelState.AddModelError("Email", "This email address is already in use.");
-            model.Departments = (await _employeeService.GetEmployeeFormViewModelAsync()).Departments;
+            await PopulateDepartments();
             return View(model);
         }
 
@@ -60,21 +64,15 @@ public class EmployeesController : Controller
         }
 
         ModelState.AddModelError("", "An error occurred while creating the employee.");
-        model.Departments = (await _employeeService.GetEmployeeFormViewModelAsync()).Departments;
+        await PopulateDepartments();
         return View(model);
     }
 
     // GET: /Employees/Edit/5
     public async Task<IActionResult> Edit(int id)
     {
-        var model = await _employeeService.GetEmployeeForEditAsync(id);
-        
-        if (model == null)
-        {
-            TempData["ErrorMessage"] = "Employee not found.";
-            return RedirectToAction(nameof(Index));
-        }
-
+        var model = await _employeeService.GetEmployeeByIdAsync(id);
+        await PopulateDepartments();
         return View(model);
     }
 
@@ -83,19 +81,17 @@ public class EmployeesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, EmployeeFormViewModel model)
     {
+        
         if (id != model.Id)
         {
             return BadRequest();
         }
-
+        
         if (!ModelState.IsValid)
         {
             // Reload departments if validation fails
-            var formModel = await _employeeService.GetEmployeeForEditAsync(id);
-            if (formModel != null)
-            {
-                model.Departments = formModel.Departments;
-            }
+            var formModel = await _employeeService.GetEmployeeByIdAsync(id);
+            await PopulateDepartments();
             return View(model);
         }
 
@@ -104,11 +100,8 @@ public class EmployeesController : Controller
         if (!isEmailUnique)
         {
             ModelState.AddModelError("Email", "This email address is already in use.");
-            var formModel = await _employeeService.GetEmployeeForEditAsync(id);
-            if (formModel != null)
-            {
-                model.Departments = formModel.Departments;
-            }
+            var formModel = await _employeeService.GetEmployeeByIdAsync(id);
+            await PopulateDepartments();
             return View(model);
         }
 
@@ -138,5 +131,10 @@ public class EmployeesController : Controller
         }
 
         return RedirectToAction(nameof(Index), new { page });
+    }
+    public async Task PopulateDepartments()
+    {
+        
+        ViewBag.Departments = await _departmentService.GetAllDepartmentsAsync();
     }
 }
