@@ -138,6 +138,24 @@ public class EmployeeService : IEmployeeService
             .AnyAsync(e => e.Email == email && e.Id != employeeId);
     }
 
+    public async Task<List<EmployeeListViewModel>> GetAllEmployeesAsync()
+    {
+        var employees = await _employeeRepo.GetAllAsync();
+        
+        return employees.Select(emp => new EmployeeListViewModel
+        {
+            Id = emp.Id,
+            FullName = emp.FullName,
+            Email = emp.Email,
+            DepartmentName = emp.Department.Name,
+            Presents = GetPresentCountForCurrentMonth(emp.AttendanceRecords),
+            Absents = GetAbsentCountForCurrentMonth(emp.AttendanceRecords),
+            AttendancePercentage = GetAttendancePercentage(
+                GetPresentCountForCurrentMonth(emp.AttendanceRecords),
+                GetAbsentCountForCurrentMonth(emp.AttendanceRecords))
+        }).ToList();
+    }
+
     // --- HELPER METHODS ---
 
     
