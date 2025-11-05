@@ -41,11 +41,11 @@ public class AttendanceDbContext : DbContext
 
             // Seed Departments
             entity.HasData(
-                new Department { Id = 1, Name = "Engineering", Code = "ENG", Location = "Building A, Floor 3" },
-                new Department { Id = 2, Name = "Human Resources", Code = "HR", Location = "Building B, Floor 1" },
-                new Department { Id = 3, Name = "Sales", Code = "SAL", Location = "Building A, Floor 2" },
-                new Department { Id = 4, Name = "Marketing", Code = "MKT", Location = "Building C, Floor 2" },
-                new Department { Id = 5, Name = "Finance", Code = "FIN", Location = "Building B, Floor 2" }
+                new Department { Id = 1, Name = "Engineering", Code = "ENGR", Location = "Building A, Floor 3" },
+                new Department { Id = 2, Name = "Human Resources", Code = "HRMG", Location = "Building B, Floor 1" },
+                new Department { Id = 3, Name = "Sales", Code = "SALE", Location = "Building A, Floor 2" },
+                new Department { Id = 4, Name = "Marketing", Code = "MRKT", Location = "Building C, Floor 2" },
+                new Department { Id = 5, Name = "Finance", Code = "FINC", Location = "Building B, Floor 2" }
             );
         });
 
@@ -74,27 +74,27 @@ public class AttendanceDbContext : DbContext
             // Seed Employees
             entity.HasData(
                 // Engineering Department
-                new Employee { Id = 1, FullName = "John Smith", Email = "john.smith@codezone.com", DepartmentId = 1 },
-                new Employee { Id = 2, FullName = "Sarah Johnson", Email = "sarah.johnson@codezone.com", DepartmentId = 1 },
-                new Employee { Id = 3, FullName = "Michael Brown", Email = "michael.brown@codezone.com", DepartmentId = 1 },
-                new Employee { Id = 4, FullName = "Emily Davis", Email = "emily.davis@codezone.com", DepartmentId = 1 },
+                new Employee { Id = 1, FullName = "John Michael Smith Anderson", Email = "john.smith@codezone.com", DepartmentId = 1 },
+                new Employee { Id = 2, FullName = "Sarah Elizabeth Johnson Williams", Email = "sarah.johnson@codezone.com", DepartmentId = 1 },
+                new Employee { Id = 3, FullName = "Michael James Brown Taylor", Email = "michael.brown@codezone.com", DepartmentId = 1 },
+                new Employee { Id = 4, FullName = "Emily Rose Davis Martinez", Email = "emily.davis@codezone.com", DepartmentId = 1 },
                 
                 // HR Department
-                new Employee { Id = 5, FullName = "David Wilson", Email = "david.wilson@codezone.com", DepartmentId = 2 },
-                new Employee { Id = 6, FullName = "Jennifer Martinez", Email = "jennifer.martinez@codezone.com", DepartmentId = 2 },
+                new Employee { Id = 5, FullName = "David Robert Wilson Thompson", Email = "david.wilson@codezone.com", DepartmentId = 2 },
+                new Employee { Id = 6, FullName = "Jennifer Marie Martinez Garcia", Email = "jennifer.martinez@codezone.com", DepartmentId = 2 },
                 
                 // Sales Department
-                new Employee { Id = 7, FullName = "Robert Anderson", Email = "robert.anderson@codezone.com", DepartmentId = 3 },
-                new Employee { Id = 8, FullName = "Lisa Taylor", Email = "lisa.taylor@codezone.com", DepartmentId = 3 },
-                new Employee { Id = 9, FullName = "James Thomas", Email = "james.thomas@codezone.com", DepartmentId = 3 },
+                new Employee { Id = 7, FullName = "Robert Charles Anderson Moore", Email = "robert.anderson@codezone.com", DepartmentId = 3 },
+                new Employee { Id = 8, FullName = "Lisa Anne Taylor Jackson", Email = "lisa.taylor@codezone.com", DepartmentId = 3 },
+                new Employee { Id = 9, FullName = "James William Thomas White", Email = "james.thomas@codezone.com", DepartmentId = 3 },
                 
                 // Marketing Department
-                new Employee { Id = 10, FullName = "Mary Jackson", Email = "mary.jackson@codezone.com", DepartmentId = 4 },
-                new Employee { Id = 11, FullName = "Christopher White", Email = "chris.white@codezone.com", DepartmentId = 4 },
+                new Employee { Id = 10, FullName = "Mary Catherine Jackson Harris", Email = "mary.jackson@codezone.com", DepartmentId = 4 },
+                new Employee { Id = 11, FullName = "Christopher John White Martin", Email = "chris.white@codezone.com", DepartmentId = 4 },
                 
                 // Finance Department
-                new Employee { Id = 12, FullName = "Patricia Harris", Email = "patricia.harris@codezone.com", DepartmentId = 5 },
-                new Employee { Id = 13, FullName = "Daniel Martin", Email = "daniel.martin@codezone.com", DepartmentId = 5 }
+                new Employee { Id = 12, FullName = "Patricia Lynn Harris Thompson", Email = "patricia.harris@codezone.com", DepartmentId = 5 },
+                new Employee { Id = 13, FullName = "Daniel Patrick Martin Clark", Email = "daniel.martin@codezone.com", DepartmentId = 5 }
             );
         });
 
