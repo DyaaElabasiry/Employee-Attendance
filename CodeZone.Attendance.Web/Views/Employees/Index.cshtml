@@ -1,0 +1,91 @@
+﻿@using CodeZone.Attendance.Data.Models
+@using CodeZone.Attendance.Web.ViewModels
+@model PagedResult<EmployeeListViewModel>
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<h1>Employees</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Employee</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Presents</th>
+            <th>Absents</th>
+            <th>%</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.FullName</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.DepartmentName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Presents)</td>
+                <td>@Html.DisplayFor(modelItem => item.Absents)</td>
+                <td>@Html.DisplayFor(modelItem => item.AttendancePercentage)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@item.Id" asp-route-page="@Model.Page" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this employee?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-page="@(Model.Page - 1)"
+   class="btn btn-secondary @prevDisabled">
+    Previous
+</a>
+
+@for (int i = 1; i <= Model.TotalPages; i++)
+{
+    <a asp-action="Index"
+       asp-route-page="@i"
+       class="btn @(i == Model.Page ? "btn-primary" : "btn-outline-secondary")">
+        @i
+    </a>
+}
+
+<a asp-action="Index"
+   asp-route-page="@(Model.Page + 1)"
+   class="btn btn-secondary @nextDisabled">
+    Next
+</a>
