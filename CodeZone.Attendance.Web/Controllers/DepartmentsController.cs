@@ -37,24 +37,18 @@ public class DepartmentsController : Controller
             return View(model);
         }
 
-        // Check code uniqueness
-        var isCodeUnique = await _departmentService.IsCodeUniqueAsync(model.Code);
-        if (!isCodeUnique)
+        var validationResult = await _departmentService.ValidateDepartmentAsync(model);
+        if (!validationResult.IsValid)
         {
-            ModelState.AddModelError("Code", "This department code is already in use.");
-            return View(model);
-        }
-
-        // Check name uniqueness
-        var isNameUnique = await _departmentService.IsNameUniqueAsync(model.Name);
-        if (!isNameUnique)
-        {
-            ModelState.AddModelError("Name", "This department name is already in use.");
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(error.Key, error.Value);
+            }
             return View(model);
         }
 
         var success = await _departmentService.CreateDepartmentAsync(model);
-        
+
         if (success)
         {
             TempData["SuccessMessage"] = "Department created successfully!";
@@ -88,24 +82,18 @@ public class DepartmentsController : Controller
             return View(model);
         }
 
-        // Check code uniqueness
-        var isCodeUnique = await _departmentService.IsCodeUniqueAsync(model.Code, model.Id);
-        if (!isCodeUnique)
+        var validationResult = await _departmentService.ValidateDepartmentAsync(model);
+        if (!validationResult.IsValid)
         {
-            ModelState.AddModelError("Code", "This department code is already in use.");
-            return View(model);
-        }
-
-        // Check name uniqueness
-        var isNameUnique = await _departmentService.IsNameUniqueAsync(model.Name, model.Id);
-        if (!isNameUnique)
-        {
-            ModelState.AddModelError("Name", "This department name is already in use.");
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(error.Key, error.Value);
+            }
             return View(model);
         }
 
         var success = await _departmentService.UpdateDepartmentAsync(model);
-        
+
         if (success)
         {
             TempData["SuccessMessage"] = "Department updated successfully!";

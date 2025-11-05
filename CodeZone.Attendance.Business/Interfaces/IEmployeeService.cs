@@ -1,4 +1,5 @@
-﻿using CodeZone.Attendance.Data.Models;
+﻿using CodeZone.Attendance.Business.Models;
+using CodeZone.Attendance.Data.Models;
 using CodeZone.Attendance.Web.ViewModels;
 
 namespace CodeZone.Attendance.Business.Interfaces;
@@ -12,4 +13,5 @@ public interface IEmployeeService
     Task<bool> UpdateEmployeeAsync(EmployeeFormViewModel model);
     Task DeleteEmployeeAsync(int id);
     Task<bool> IsEmailUniqueAsync(string email, int employeeId = 0);
+    Task<ValidationResult> ValidateEmployeeAsync(EmployeeFormViewModel model); 
 }

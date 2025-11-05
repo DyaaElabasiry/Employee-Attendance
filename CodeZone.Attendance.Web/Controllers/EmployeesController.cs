@@ -16,12 +16,9 @@ public class EmployeesController : Controller
     }
 
     // Handles GET: /Employees or /Employees/Index
-    public async Task<IActionResult> Index(int page = 1) // Default to page 1
+    public async Task<IActionResult> Index(int page = 1)
     {
-        // 1. Call the service
         var pagedViewModel = await _employeeService.GetPagedEmployeeListAsync(page, 10);
-
-        // 2. Pass the entire paged result directly to the view
         return View(pagedViewModel);
     }
 
@@ -38,19 +35,19 @@ public class EmployeesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(EmployeeFormViewModel model)
     {
-        await PopulateDepartments();
         if (!ModelState.IsValid)
         {
-            // Reload departments if validation fails
             await PopulateDepartments();
             return View(model);
         }
 
-        // Check email uniqueness
-        var isEmailUnique = await _employeeService.IsEmailUniqueAsync(model.Email);
-        if (!isEmailUnique)
+        var validationResult = await _employeeService.ValidateEmployeeAsync(model);
+        if (!validationResult.IsValid)
         {
-            ModelState.AddModelError("Email", "This email address is already in use.");
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(error.Key, error.Value);
+            }
             await PopulateDepartments();
             return View(model);
         }
@@ -81,7 +78,6 @@ public class EmployeesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, EmployeeFormViewModel model)
     {
-        
         if (id != model.Id)
         {
             return BadRequest();
@@ -89,18 +85,17 @@ public class EmployeesController : Controller
         
         if (!ModelState.IsValid)
         {
-            // Reload departments if validation fails
-            var formModel = await _employeeService.GetEmployeeByIdAsync(id);
             await PopulateDepartments();
             return View(model);
         }
 
-        // Check email uniqueness
-        var isEmailUnique = await _employeeService.IsEmailUniqueAsync(model.Email, model.Id);
-        if (!isEmailUnique)
+        var validationResult = await _employeeService.ValidateEmployeeAsync(model);
+        if (!validationResult.IsValid)
         {
-            ModelState.AddModelError("Email", "This email address is already in use.");
-            var formModel = await _employeeService.GetEmployeeByIdAsync(id);
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(error.Key, error.Value);
+            }
             await PopulateDepartments();
             return View(model);
         }
@@ -118,7 +113,7 @@ public class EmployeesController : Controller
     }
 
     // GET: /Employees/Delete/5
-    public async Task<IActionResult> Delete(int id,int page)
+    public async Task<IActionResult> Delete(int id, int page)
     {
         try
         {
@@ -132,9 +127,9 @@ public class EmployeesController : Controller
 
         return RedirectToAction(nameof(Index), new { page });
     }
+
     public async Task PopulateDepartments()
     {
-        
         ViewBag.Departments = await _departmentService.GetAllDepartmentsAsync();
     }
 }

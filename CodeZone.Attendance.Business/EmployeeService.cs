@@ -1,4 +1,5 @@
 ﻿using CodeZone.Attendance.Business.Interfaces;
+using CodeZone.Attendance.Business.Models;
 using CodeZone.Attendance.Data;
 using CodeZone.Attendance.Data.Entities;
 using CodeZone.Attendance.Data.Models;
@@ -49,7 +50,19 @@ public class EmployeeService : IEmployeeService
             TotalCount = pagedEmployeeEntities.TotalCount
         };
     }
+    public async Task<ValidationResult> ValidateEmployeeAsync(EmployeeFormViewModel model)
+    {
+        var result = ValidationResult.Success();
 
+        // Check email uniqueness
+        var isEmailUnique = await IsEmailUniqueAsync(model.Email, model.Id);
+        if (!isEmailUnique)
+        {
+            result.AddError("Email", "This email address is already in use.");
+        }
+
+        return result;
+    }
     public async Task<EmployeeFormViewModel?> GetEmployeeByIdAsync(int id)
     {
         var employee = await _employeeRepo.GetByIdAsync(id);
