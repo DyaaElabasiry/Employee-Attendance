@@ -9,50 +9,52 @@
 
 <hr />
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Edit" method="post">
-            <input type="hidden" asp-for="Id" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <div class="form-group mb-3">
-                <label asp-for="EmployeeId" class="form-label"></label>
-                <select asp-for="EmployeeId" class="form-select">
-                    <option value="">-- Select Employee --</option>
-                    @if (ViewBag.Employees != null)
-                    {
-                        @foreach (var emp in ViewBag.Employees)
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="border rounded p-4">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="form-group mb-3">
+                    <label asp-for="EmployeeId" class="form-label"></label>
+                    <select asp-for="EmployeeId" class="form-select">
+                        <option value="">-- Select Employee --</option>
+                        @if (ViewBag.Employees != null)
                         {
-                            <option value="@emp.Id">@emp.FullName - @emp.DepartmentName</option>
+                            @foreach (var emp in ViewBag.Employees)
+                            {
+                                <option value="@emp.Id">@emp.FullName - @emp.DepartmentName</option>
+                            }
                         }
-                    }
-                </select>
-                <span asp-validation-for="EmployeeId" class="text-danger"></span>
-            </div>
+                    </select>
+                    <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Date" class="form-label"></label>
-                <input asp-for="Date" class="form-control" type="date" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Date" class="form-label"></label>
+                    <input asp-for="Date" class="form-control" type="date" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Status" class="form-label"></label>
-                <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<CodeZone.Attendance.Data.Entities.AttendanceStatus>()">
-                    <option value="">-- Select Status --</option>
-                </select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Status" class="form-label"></label>
+                    <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<CodeZone.Attendance.Data.Entities.AttendanceStatus>()">
+                        <option value="">-- Select Status --</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
 
-            <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-save"></i> Save Changes
-                </button>
-                <a asp-action="Index" class="btn btn-secondary">
-                    <i class="bi bi-x-circle"></i> Cancel
-                </a>
-            </div>
-        </form>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

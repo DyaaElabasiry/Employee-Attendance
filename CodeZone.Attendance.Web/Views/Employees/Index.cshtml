@@ -28,64 +28,77 @@
     <a asp-action="Create" class="btn btn-primary">Add New Employee</a>
 </p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Department</th>
-            <th>Presents</th>
-            <th>Absents</th>
-            <th>Percentage</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        
-        @foreach (var item in Model.Items)
-        {
+<div class="mx-auto" style="max-width: 90%;">
+    <table class="table table-striped table-hover rounded overflow-hidden" style="border: 1px solid #dee2e6; border-radius: 0.5rem;">
+        <thead class="bg-dark text-white">
             <tr>
-                <td>@item.FullName</td>
-                <td>@Html.DisplayFor(modelItem => item.Email)</td>
-                <td>@Html.DisplayFor(modelItem => item.DepartmentName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Presents)</td>
-                <td>@Html.DisplayFor(modelItem => item.Absents)</td>
-                <td>@Html.DisplayFor(modelItem => item.AttendancePercentage)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
-                    <form asp-action="Delete" asp-route-id="@item.Id" asp-route-page="@Model.Page" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this employee?');">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Presents</th>
+                <th>Absents</th>
+                <th>Percentage</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.FullName</td>
+                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DepartmentName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Presents)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Absents)</td>
+                    <td>@Html.DisplayFor(modelItem => item.AttendancePercentage)</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Edit</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" asp-route-page="@Model.Page" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this employee?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <hr />
 
-@{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-}
+<nav aria-label="Attendance pagination">
+    <ul class="pagination justify-content-center">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link pagination-link" asp-action="Index" asp-route-page="@(Model.Page - 1)">Previous</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Previous</span>
+            </li>
+        }
 
-<a asp-action="Index"
-   asp-route-page="@(Model.Page - 1)"
-   class="btn btn-secondary @prevDisabled">
-    Previous
-</a>
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.Page ? "active" : "")">
+                <a class="page-link pagination-link" asp-action="Index" asp-route-page="@i">@i</a>
+            </li>
+        }
 
-@for (int i = 1; i <= Model.TotalPages; i++)
-{
-    <a asp-action="Index"
-       asp-route-page="@i"
-       class="btn @(i == Model.Page ? "btn-primary" : "btn-outline-secondary")">
-        @i
-    </a>
-}
-
-<a asp-action="Index"
-   asp-route-page="@(Model.Page + 1)"
-   class="btn btn-secondary @nextDisabled">
-    Next
-</a>
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link pagination-link" asp-action="Index" asp-route-page="@(Model.Page + 1)">Next</a>
+            </li>
+        }
+        else
+        {
+            <li class="page-item disabled">
+                <span class="page-link">Next</span>
+            </li>
+        }
+    </ul>
+</nav>
