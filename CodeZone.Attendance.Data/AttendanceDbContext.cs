@@ -45,7 +45,8 @@ public class AttendanceDbContext : DbContext
                 new Department { Id = 2, Name = "Human Resources", Code = "HRMG", Location = "Building B, Floor 1" },
                 new Department { Id = 3, Name = "Sales", Code = "SALE", Location = "Building A, Floor 2" },
                 new Department { Id = 4, Name = "Marketing", Code = "MRKT", Location = "Building C, Floor 2" },
-                new Department { Id = 5, Name = "Finance", Code = "FINC", Location = "Building B, Floor 2" }
+                new Department { Id = 5, Name = "Finance", Code = "FINC", Location = "Building B, Floor 2" },
+                new Department { Id = 6, Name = "Security", Code = "SECU", Location = "Building B, Floor 2" }
             );
         });
 
