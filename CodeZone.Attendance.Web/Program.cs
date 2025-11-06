@@ -3,6 +3,7 @@ using CodeZone.Attendance.Business.Interfaces;
 using CodeZone.Attendance.Data;
 using CodeZone.Attendance.Data.Repositories;
 using CodeZone.Attendance.Data.Repositories.Interfaces;
+using CodeZone.Attendance.Web.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,9 +19,12 @@ builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 // Register DbContext
 builder.Services.AddDbContext<AttendanceDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseInMemoryDatabase("EmployeeAttendanceDB"));
 
 var app = builder.Build();
+
+// Seed the database
+app.Services.SeedDatabase();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -41,6 +45,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Employees}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

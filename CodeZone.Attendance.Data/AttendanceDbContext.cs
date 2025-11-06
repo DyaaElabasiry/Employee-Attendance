@@ -129,19 +129,15 @@ public class AttendanceDbContext : DbContext
             var attendanceRecords = new List<AttendanceRecord>();
             int recordId = 1;
 
-            // Generate attendance for the first 20 days of current month for all employees
+            
             for (int employeeId = 1; employeeId <= 13; employeeId++)
             {
-                for (int day = 1; day <= Math.Min(20, DateTime.DaysInMonth(currentYear, currentMonth)); day++)
+                for (int day = 1; day <= today.Day; day++)
                 {
                     var date = new DateTime(currentYear, currentMonth, day);
                     
-                    // Skip weekends
-                    if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
-                        continue;
-
-                    // 85% attendance rate (random absences)
-                    var status = (employeeId + day) % 7 == 0 ? AttendanceStatus.Absent : AttendanceStatus.Present;
+                    
+                    var status = (employeeId + day) % 5 == 0 ? AttendanceStatus.Absent : AttendanceStatus.Present;
                     
                     attendanceRecords.Add(new AttendanceRecord
                     {
